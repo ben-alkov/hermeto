@@ -25,7 +25,7 @@ The primary intended use of Hermeto's outputs is for network-isolated container 
 Please note that Hermeto is rather picky, aiming to
 
 * encourage or enforce best practices
-* never execute arbitrary code [^pip-download-example]
+* never execute arbitrary code[^1]
 * keep the implementation simple
 
 To play nicely with Hermeto, the build process for your project must be
