@@ -156,16 +156,17 @@ The only supported format for the config file is YAML.
 
 ## Package managers
 
-| Package manager             | Ecosystem  |
-|-----------------------------|------------|
-| [bundler](#bundler)         | Ruby       |
-| [cargo](#cargo)             | Rust       |
-| [generic](#generic-fetcher) | N/A        |
-| [gomod](#gomod)             | Go         |
-| [npm](#npm)                 | JavaScript |
-| [pip](#pip)                 | Python     |
-| rpm **†**                   | RPM        |
-| [yarn](#yarn)               | JavaScript |
+| Package manager               | Ecosystem  |
+|-------------------------------|------------|
+| [bundler](#bundler)           | Ruby       |
+| [cargo](#cargo)               | Rust       |
+| [generic](#generic-fetcher)   | N/A        |
+| [gomod](#gomod)               | Go         |
+| [npm](#npm)                   | JavaScript |
+| [pip](#pip)                   | Python     |
+| rpm **†**                     | RPM        |
+| [yarn](#yarn)                 | JavaScript |
+| [yarn_classic](#yarn_classic) | JavaScript |
 
 **†** Currently, **rpm** is not fully supported. Therefore, we do not have
 documentation for it.
@@ -269,6 +270,17 @@ project successfully. If missing, you can easily generate one by running
 
 See [docs/yarn.md][] for more details.
 
+### [yarn_classic][]
+
+Hermeto's `yarn_classic` package manager relies on Yarn Classic being installed on
+the system where Hermeto is run. If requested to process a package with Yarn
+Classic PM it will check for yarn version and will refuse to proceed if the
+necessary version is missing. Yarn itself is used by Hermeto under the hood to
+organize package processing with some tweaks to ensure that the packages are
+prepared to be built in isolation.
+
+See [docs/yarn_classic.md][] for more details.
+
 ## Project status
 
 Hermeto was derived from (but is not a direct fork of) [Cachito][].
@@ -306,6 +318,7 @@ Hermeto was derived from (but is not a direct fork of) [Cachito][].
 [docs/npm.md]: https://hermetoproject.github.io/hermeto/npm
 [docs/pip.md]: https://hermetoproject.github.io/hermeto/pip
 [docs/usage.md]: https://hermetoproject.github.io/hermeto/usage
+[docs/yarn_classic.md]: https://hermetoproject.github.io/hermeto/yarn_classic
 [docs/yarn.md]: https://hermetoproject.github.io/hermeto/yarn
 [Gemfile.lock]: https://bundler.io/guides/using_bundler_in_applications.html#gemfilelock
 [Gemfile]: https://bundler.io/v2.5/man/gemfile.5.html
@@ -329,4 +342,5 @@ Hermeto was derived from (but is not a direct fork of) [Cachito][].
 [sdist]: https://packaging.python.org/en/latest/specifications/source-distribution-format
 [wheel]: https://packaging.python.org/en/latest/specifications/binary-distribution-format
 [yarn install]: https://v3.yarnpkg.com/getting-started/usage#installing-all-the-dependencies
+[yarn_classic]: https://classic.yarnpkg.com
 [yarn]: https://yarnpkg.com
