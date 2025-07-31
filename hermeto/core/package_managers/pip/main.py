@@ -364,7 +364,7 @@ def _process_url_req(
         download_info=_download_url_package(req, pip_deps_dir, trusted_hosts),
         **kwargs,
     )
-    if req.url.endswith(WHEEL_FILE_EXTENSION):
+    if req.get_url().endswith(WHEEL_FILE_EXTENSION):
         result["package_type"] = "wheel"
 
     return result
@@ -455,7 +455,7 @@ def _download_vcs_package(requirement: PipRequirement, pip_deps_dir: RootedPath)
 
     :return: Dict with package name, download path and git info
     """
-    git_info = extract_git_info(requirement.url)
+    git_info = extract_git_info(requirement.get_url())
 
     download_to = pip_deps_dir.join_within_root(_get_external_requirement_filepath(requirement))
     download_to.path.parent.mkdir(exist_ok=True, parents=True)
@@ -481,7 +481,7 @@ def _download_url_package(
 
     :return: Dict with package name, download path, original URL and URL with hash
     """
-    url = urlparse.urlparse(requirement.url)
+    url = urlparse.urlparse(requirement.get_url())
 
     download_to = pip_deps_dir.join_within_root(_get_external_requirement_filepath(requirement))
     download_to.path.parent.mkdir(exist_ok=True, parents=True)
@@ -495,17 +495,17 @@ def _download_url_package(
     else:
         insecure = False
 
-    download_binary_file(requirement.url, download_to.path, insecure=insecure)
+    download_binary_file(requirement.get_url(), download_to.path, insecure=insecure)
 
     if "cachito_hash" in requirement.qualifiers:
-        url_with_hash = requirement.url
+        url_with_hash = requirement.get_url()
     else:
         url_with_hash = _add_cachito_hash_to_url(url, requirement.hashes[0])
 
     return {
         "package": requirement.package,
         "path": download_to.path,
-        "original_url": requirement.url,
+        "original_url": requirement.get_url(),
         "url_with_hash": url_with_hash,
     }
 
@@ -662,7 +662,7 @@ def _get_external_requirement_filepath(requirement: PipRequirement) -> Path:
         hashes = requirement.hashes
         hash_spec = hashes[0] if hashes else requirement.qualifiers["cachito_hash"]
         _, _, digest = hash_spec.partition(":")
-        orig_url = urlparse.urlparse(requirement.url)
+        orig_url = urlparse.urlparse(requirement.get_url())
         file_ext = ""
         for ext in ALL_FILE_EXTENSIONS:
             if orig_url.path.endswith(ext):
@@ -677,7 +677,7 @@ def _get_external_requirement_filepath(requirement: PipRequirement) -> Path:
             filepath = Path(f"{package}-{digest}{file_ext}")
 
     elif requirement.kind == "vcs":
-        git_info = extract_git_info(requirement.url)
+        git_info = extract_git_info(requirement.get_url())
         repo = git_info["repo"]
         ref = git_info["ref"]
         filepath = Path(f"{repo}-gitcommit-{ref}.tar.gz")
