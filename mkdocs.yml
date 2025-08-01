@@ -31,6 +31,10 @@ theme:
     - search.share
     - search.suggest
 
+# Custom CSS
+extra_css:
+  - stylesheets/extra.css
+
 # Navigation bar
 nav:
   - Home: index.md
