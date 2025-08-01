@@ -778,12 +778,12 @@ Note that the repo also contains a `build.sh` script which will execute all of
 these steps for you.
 
 [--find-links]: https://pip.pypa.io/en/stable/cli/pip_install/#cmdoption-f
+[--index-url]: https://pip.pypa.io/en/stable/cli/pip_install/#install-index-url
 [--no-binary]: https://pip.pypa.io/en/stable/cli/pip_install/#cmdoption-no-binary
 [--no-index]: https://pip.pypa.io/en/stable/cli/pip_install/#cmdoption-no-index
-[--use-pep517]: https://pip.pypa.io/en/stable/cli/pip_install/#cmdoption-use-pep517
-[--index-url]: https://pip.pypa.io/en/stable/cli/pip_install/#install-index-url
 [--require-hashes]: https://pip.pypa.io/en/stable/cli/pip_install/#install-require-hashes
 [--trusted-host]: https://pip.pypa.io/en/stable/cli/pip/#trusted-host
+[--use-pep517]: https://pip.pypa.io/en/stable/cli/pip_install/#cmdoption-use-pep517
 [a **.netrc** file]: https://pip.pypa.io/en/stable/topics/authentication/#netrc-support
 [basic pip project]: https://github.com/hermetoproject/doc-examples/tree/pip-basic
 [binary format]: https://packaging.python.org/en/latest/specifications/binary-distribution-format
