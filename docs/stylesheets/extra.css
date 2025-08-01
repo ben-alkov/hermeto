@@ -1,12 +1,12 @@
 /* Custom h5 styling for Hermeto docs */
 .md-typeset h5 {
-  color: var(--md-primary-fg-color, #2e7d32);
-  font-size: 1.1em;
-  font-weight: 600;
-  margin: 1.5em 0 0.75em;
+  color: var(--md-primary-fg-color, #2e7d32) !important;
+  font-size: 1.1em !important;
+  font-weight: 600 !important;
+  margin: 1.5em 0 0.75em !important;
   padding-bottom: 0.25em;
-  border-bottom: 2px solid rgba(46, 125, 50, 0.2);
-  letter-spacing: 0;
+  border-bottom: 2px solid rgba(46, 125, 50, 0.2) !important;
+  letter-spacing: 0 !important;
 }
 
 /* Responsive adjustments */

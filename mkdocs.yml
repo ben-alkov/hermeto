@@ -52,13 +52,14 @@ nav:
 
 # Markdown extensions
 markdown_extensions:
+  - markdown.extensions.def_list
+  - markdown.extensions.abbr
+  - markdown.extensions.attr_list
+  - markdown.extensions.md_in_html
   - pymdownx.emoji
   - toc:
       permalink: true
   - footnotes
-  - def_list
-  - attr_list
-  - md_in_html
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.inlinehilite
