@@ -23,7 +23,7 @@
   border-bottom-color: rgba(129, 199, 132, 0.3);
 }
 
-/* Ensure links in h5 render as links */
+/* If markdown links do render as actual links, style them */
 .md-typeset h5 a {
   color: var(--md-accent-fg-color, #4caf50) !important;
   text-decoration: underline !important;

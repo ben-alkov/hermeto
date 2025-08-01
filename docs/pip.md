@@ -293,7 +293,7 @@ supported.
 
 #### Global
 
-##### [`--index-url`][]
+##### [`--index-url`](https://pip.pypa.io/en/stable/cli/pip_install/#install-index-url)
 
 *Supported since v0.8.0.*
 
@@ -309,12 +309,12 @@ Make Hermeto download packages from the specified Python Package Index server.
 :warning: **Do not include credentials in the index url.** If needed, provide
 authentication via [a `.netrc` file][].
 
-##### [`--require-hashes`][]
+##### [`--require-hashes`](https://pip.pypa.io/en/stable/cli/pip_install/#install-require-hashes)
 
 Enables hash-checking mode. Typically redundant, since the presence of any
 `--hash` option enables hash-checking mode as well.
 
-##### [`--trusted-host`][]
+##### [`--trusted-host`](https://pip.pypa.io/en/stable/cli/pip/#trusted-host)
 
 Disables HTTPS validation for a host. Don't use this for production builds.
 
@@ -778,11 +778,8 @@ Note that the repo also contains a `build.sh` script which will execute all of
 these steps for you.
 
 [`--find-links`]: https://pip.pypa.io/en/stable/cli/pip_install/#cmdoption-f
-[`--index-url`]: https://pip.pypa.io/en/stable/cli/pip_install/#install-index-url
 [`--no-binary`]: https://pip.pypa.io/en/stable/cli/pip_install/#cmdoption-no-binary
 [`--no-index`]: https://pip.pypa.io/en/stable/cli/pip_install/#cmdoption-no-index
-[`--require-hashes`]: https://pip.pypa.io/en/stable/cli/pip_install/#install-require-hashes
-[`--trusted-host`]: https://pip.pypa.io/en/stable/cli/pip/#trusted-host
 [`--use-pep517`]: https://pip.pypa.io/en/stable/cli/pip_install/#cmdoption-use-pep517
 [a `.netrc` file]: https://pip.pypa.io/en/stable/topics/authentication/#netrc-support
 [basic pip project]: https://github.com/hermetoproject/doc-examples/tree/pip-basic
