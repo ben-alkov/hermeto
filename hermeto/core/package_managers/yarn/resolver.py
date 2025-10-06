@@ -457,18 +457,31 @@ class _ComponentResolver:
 
     def _get_path_patch_url(self, patch_locator: PatchLocator, patch_path: Path) -> str:
         """Return a PURL-style VCS URL qualifier with subpath for a Patch."""
-        if patch_locator.locator is None:
-            raise UnsupportedFeature(
-                f"{patch_locator} is missing an associated workspace locator "
-                "and {APP_NAME} expects all non-builtin yarn patches to have one"
-            )
-
+        rel_path: str = "~/"
         project_path = self._project.source_dir
-        workspace_path = patch_locator.locator.relpath
-        normalized = self._project.source_dir.join_within_root(workspace_path, patch_path)
         repo_url = get_repo_id(project_path.root).as_vcs_url_qualifier()
-        subpath_from_root = str(normalized.subpath_from_root)
 
+        if patch_path.is_absolute():
+            abs_path = patch_path.resolve()
+            if not abs_path.is_relative_to(project_path.root):
+                raise UnsupportedFeature(
+                    f"Absolute patch path {patch_path} is outside the project root {project_path.root}"
+                )
+            relative_to_root = abs_path.relative_to(project_path.root)
+            normalized = project_path.join_within_root(relative_to_root)
+        elif str(patch_path).startswith(rel_path):
+            project_relative_path = Path(str(patch_path).removeprefix(rel_path))
+            normalized = project_path.join_within_root(project_relative_path)
+        else:
+            if patch_locator.locator is None:
+                raise UnsupportedFeature(
+                    f"{patch_locator} is missing an associated workspace locator "
+                    f"and {APP_NAME} expects all relative yarn patches to have one"
+                )
+            workspace_path = patch_locator.locator.relpath
+            normalized = self._project.source_dir.join_within_root(workspace_path, patch_path)
+
+        subpath_from_root = str(normalized.subpath_from_root)
         return f"{repo_url}#{subpath_from_root}"
 
     def _get_builtin_patch_url(self, patch: str, yarn_version: Version) -> str:

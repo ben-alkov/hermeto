@@ -1024,3 +1024,88 @@ def test_get_pedigree_with_unsupported_locators(
 
     with pytest.raises(UnsupportedFeature):
         _ComponentResolver({}, patch_locators, mock_project, rooted_tmp_path.re_root("output"))
+
+
+@mock.patch("hermeto.core.package_managers.yarn.resolver.get_repo_id")
+@mock.patch("hermeto.core.package_managers.yarn.resolver.extract_yarn_version_from_env")
+def test_get_pedigree_with_project_relative_patches(
+    mock_get_yarn_version: mock.Mock, mock_get_repo_id: mock.Mock, rooted_tmp_path: RootedPath
+) -> None:
+    """Test that project-relative patches (~/...) don't require a workspace locator.
+
+    Per patch-locator-comparison.md: 35-45, 58-67:
+    Project-relative paths (~/...) should not require a parent locator.
+    """
+    mock_get_yarn_version.return_value = Version(3, 0, 0)
+    mock_get_repo_id.return_value = MOCK_REPO_ID
+
+    patched_package = NpmLocator(None, "fsevents", "1.0.0")
+    patch_locator = PatchLocator(
+        patched_package,
+        [Path("~/my-patches/fsevents.patch")],
+        None,
+    )
+
+    expected_pedigree = {
+        patched_package: Pedigree(
+            patches=[
+                Patch(
+                    type="unofficial",
+                    diff=PatchDiff(
+                        url="git+https://github.com/org/project.git@fffffff#my-patches/fsevents.patch"
+                    ),
+                ),
+            ]
+        ),
+    }
+
+    mock_project = mock.Mock(source_dir=rooted_tmp_path.re_root("source"))
+    resolver = _ComponentResolver(
+        {}, [patch_locator], mock_project, rooted_tmp_path.re_root("output")
+    )
+
+    assert resolver._pedigree_mapping == expected_pedigree
+
+
+@mock.patch("hermeto.core.package_managers.yarn.resolver.get_repo_id")
+@mock.patch("hermeto.core.package_managers.yarn.resolver.extract_yarn_version_from_env")
+def test_get_pedigree_with_absolute_patches(
+    mock_get_yarn_version: mock.Mock, mock_get_repo_id: mock.Mock, rooted_tmp_path: RootedPath
+) -> None:
+    """Test that absolute patches don't require a workspace locator.
+
+    Per patch-locator-comparison.md: 35-45, 58-67:
+    Absolute paths should not require a parent locator.
+    """
+    mock_get_yarn_version.return_value = Version(3, 0, 0)
+    mock_get_repo_id.return_value = MOCK_REPO_ID
+
+    patched_package = NpmLocator(None, "fsevents", "1.0.0")
+    source_dir = rooted_tmp_path.re_root("source")
+    abs_patch_path = source_dir.join_within_root("absolute-patches/fsevents.patch").path
+
+    patch_locator = PatchLocator(
+        patched_package,
+        [abs_patch_path],
+        None,
+    )
+
+    expected_pedigree = {
+        patched_package: Pedigree(
+            patches=[
+                Patch(
+                    type="unofficial",
+                    diff=PatchDiff(
+                        url="git+https://github.com/org/project.git@fffffff#absolute-patches/fsevents.patch"
+                    ),
+                ),
+            ]
+        ),
+    }
+
+    mock_project = mock.Mock(source_dir=source_dir)
+    resolver = _ComponentResolver(
+        {}, [patch_locator], mock_project, rooted_tmp_path.re_root("output")
+    )
+
+    assert resolver._pedigree_mapping == expected_pedigree

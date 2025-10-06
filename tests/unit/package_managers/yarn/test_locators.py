@@ -537,6 +537,58 @@ def test_parse_unknown_protocol(locator_str: str) -> None:
         parse_locator(locator_str)
 
 
+def test_project_relative_patch_without_locator() -> None:
+    """Test parsing project-relative patch paths (~/...) without parent locator.
+
+    Per patch-locator-comparison.md: 10, 22, 27-29, 61-66:
+    Project-relative paths (~/...) should not require a parent locator.
+    """
+    locator_str = (
+        "left-pad@patch:left-pad@npm%3A1.3.0#~/patches/left-pad.patch::version=1.3.0&hash=629bda"
+    )
+
+    locator = parse_locator(locator_str)
+
+    assert isinstance(locator, PatchLocator)
+    assert locator.package == NpmLocator(scope=None, name="left-pad", version="1.3.0")
+    assert locator.patches == (Path("~/patches/left-pad.patch"),)
+    assert locator.locator is None
+
+
+def test_absolute_patch_without_locator() -> None:
+    """Test parsing absolute patch paths without parent locator.
+
+    Per patch-locator-comparison.md: 11, 23, 37, 61-64:
+    Absolute paths should not require a parent locator.
+    """
+    locator_str = (
+        "left-pad@patch:left-pad@npm%3A1.3.0#/tmp/patches/left-pad.patch::version=1.3.0&hash=629bda"
+    )
+
+    locator = parse_locator(locator_str)
+
+    assert isinstance(locator, PatchLocator)
+    assert locator.package == NpmLocator(scope=None, name="left-pad", version="1.3.0")
+    assert locator.patches == (Path("/tmp/patches/left-pad.patch"),)
+    assert locator.locator is None
+
+
+def test_multiple_flags_patch() -> None:
+    """Test parsing patch paths with multiple flags.
+
+    Per patch-locator-comparison.md: 13, 104-113, 141-144:
+    TypeScript supports multiple flags via '!' delimiter (e.g., optional!locator!path).
+    """
+    locator_str = "left-pad@patch:left-pad@npm%3A1.3.0#optional!locator!./patches/left-pad.patch::version=1.3.0&hash=629bda&locator=berryscary%40workspace%3A."
+
+    locator = parse_locator(locator_str)
+
+    assert isinstance(locator, PatchLocator)
+    assert locator.package == NpmLocator(scope=None, name="left-pad", version="1.3.0")
+    assert locator.patches == (Path("patches/left-pad.patch"),)
+    assert locator.locator == WorkspaceLocator(scope=None, name="berryscary", relpath=Path("."))
+
+
 @pytest.mark.parametrize(
     "locator_str, expect_err",
     [
