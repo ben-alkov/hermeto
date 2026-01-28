@@ -335,7 +335,7 @@ class _ComponentResolver:
             try:
                 qualifiers.update(get_vcs_qualifiers(project_path.root))
             except NotAGitRepo:
-                if get_config().mode == Mode.STRICT:
+                if get_config().mode != Mode.PERMISSIVE:
                     raise
             subpath = str(workspace_path)
 
@@ -349,7 +349,7 @@ class _ComponentResolver:
             try:
                 qualifiers.update(get_vcs_qualifiers(project_path.root))
             except NotAGitRepo:
-                if get_config().mode == Mode.STRICT:
+                if get_config().mode != Mode.PERMISSIVE:
                     raise
             subpath = str(normalized.subpath_from_root)
 
