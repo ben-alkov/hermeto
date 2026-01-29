@@ -10,7 +10,12 @@ import pytest
 from git.repo import Repo
 
 from hermeto.core.errors import FetchError, NotAGitRepo, UnsupportedFeature
-from hermeto.core.scm import RepoID, clone_as_tarball, get_repo_for_path, get_repo_id
+from hermeto.core.scm import (
+    RepoID,
+    clone_as_tarball,
+    get_repo_for_path,
+    get_repo_id,
+)
 
 INITIAL_COMMIT = "78510c591e2be635b010a52a7048b562bad855a3"
 
@@ -50,6 +55,7 @@ class TestRepoID:
 
         if isinstance(expect_result, str):
             repo_id = get_repo_id(golang_repo_path)
+            assert repo_id is not None
             assert repo_id.origin_url == expect_result
             assert repo_id.parsed_origin_url == urlsplit(expect_result)
             assert repo_id.commit_id == expect_commit_id
@@ -73,6 +79,16 @@ class TestRepoID:
         commit_id = "abcdef1234"
         expect_vcs_url = "git+ssh://git@github.com/foo/bar.git@abcdef1234"
         assert RepoID(origin_url, commit_id).as_vcs_url_qualifier() == expect_vcs_url
+
+
+class TestGetVcsQualifiers:
+    def test_returns_vcs_url_for_git_repo(self, golang_repo_path: Path) -> None:
+        Repo(golang_repo_path).create_remote("origin", "https://github.com/org/repo.git")
+
+        result = get_repo_id(golang_repo_path)
+
+        assert result is not None
+        assert result.origin_url == "https://github.com/org/repo.git"
 
 
 def test_clone_as_tarball(golang_repo_path: Path, tmp_path: Path) -> None:
