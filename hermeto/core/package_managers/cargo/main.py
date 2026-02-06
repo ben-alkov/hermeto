@@ -199,7 +199,7 @@ def _fetch_dependencies(package_dir: RootedPath, request: Request) -> CargoVendo
             cmd=cmd,
             params={"cwd": package_dir, "env": env},
             package_dir=package_dir.path,
-            mode=request.mode,
+            mode=get_config().mode,
         )
 
 
