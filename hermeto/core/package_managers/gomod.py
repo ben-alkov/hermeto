@@ -711,7 +711,13 @@ def fetch_gomod_source(request: Request) -> RequestOutput:
     annotations: list[Annotation] = []
 
     repo_name = _get_repository_name(request.source_dir)
-    version_resolver = ModuleVersionResolver.from_repo_path(request.source_dir)
+    try:
+        version_resolver = ModuleVersionResolver.from_repo_path(request.source_dir)
+    except NotAGitRepo:
+        if get_config().mode == Mode.PERMISSIVE:
+            version_resolver = ModuleVersionResolver.without_repo()
+        else:
+            raise
 
     gomod_download_dir = request.output_dir.join_within_root("deps/gomod/pkg/mod/cache/download")
     gomod_download_dir.path.mkdir(exist_ok=True, parents=True)
@@ -741,7 +747,13 @@ def fetch_gomod_source(request: Request) -> RequestOutput:
                 log.error("Failed to fetch gomod dependencies")
                 raise
 
-            vendor_changed = _vendor_changed(main_module_dir)
+            try:
+                vendor_changed = _vendor_changed(main_module_dir)
+            except NotAGitRepo:
+                if get_config().mode == Mode.PERMISSIVE:
+                    vendor_changed = False
+                else:
+                    raise
             if vendor_changed and get_config().mode != Mode.PERMISSIVE:
                 raise PackageRejected(
                     reason=(
@@ -1367,10 +1379,19 @@ class GoCacheTemporaryDirectory(tempfile.TemporaryDirectory):
 class ModuleVersionResolver:
     """Resolves the versions of Go modules in a git repository."""
 
-    def __init__(self, repo: GitRepo, commit: git.objects.commit.Commit):
+    def __init__(
+        self,
+        repo: GitRepo | None,
+        commit: git.objects.commit.Commit | None,
+    ):
         """Initialize a ModuleVersionResolver for the provided Repo."""
         self._repo = repo
         self._commit = commit
+
+    @classmethod
+    def without_repo(cls) -> "Self":
+        """Return a resolver that always produces a placeholder version."""
+        return cls(repo=None, commit=None)
 
     @classmethod
     def from_repo_path(cls, repo_path: RootedPath) -> "Self":
@@ -1462,6 +1483,9 @@ class ModuleVersionResolver:
         :param app_dir: the path to the module directory
         :return: a version as `go list` would provide
         """
+        if self._repo is None or self._commit is None:
+            return "v0.0.0"
+
         # If the module is version v2 or higher, the major version of the module is included as /vN at
         # the end of the module path. If the module is version v0 or v1, the major version is omitted
         # from the module path.
