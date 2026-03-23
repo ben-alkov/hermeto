@@ -139,7 +139,7 @@ def _fast_copy(src: Path, dest: Path) -> int:
             raise _FastCopyFailedFallback()
 
         try:
-            while nbytes := os.copy_file_range(srcfd, destfd, count=_get_blocksize(srcfd)):  # type: ignore
+            while nbytes := os.copy_file_range(srcfd, destfd, count=_get_blocksize(srcfd)):  # type: ignore[attr-defined]
                 total += nbytes
 
         # `os` module deos not have attribute `copy_file_range` on some platforms (see type ignore above)

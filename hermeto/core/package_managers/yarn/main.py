@@ -235,7 +235,7 @@ def _set_yarnrc_configuration(
 
     # In Yarn v4, constraints can be automatically executed as part of `yarn install`, so they
     # need to be explicitly disabled
-    if version in VersionsRange("4.0.0-rc1", "5.0.0"):  # type: ignore
+    if version in VersionsRange("4.0.0-rc1", "5.0.0"):
         yarn_rc["enableConstraintsChecks"] = False
 
     yarn_rc.write()

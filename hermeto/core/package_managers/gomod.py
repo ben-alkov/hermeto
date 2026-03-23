@@ -620,7 +620,7 @@ def _create_packages_from_parsed_data(
 
         matched_name = max(
             filter(path.is_relative_to, indexed_modules.keys()),
-            key=len,  # type: ignore
+            key=len,  # type: ignore[type-var]
             default=None,
         )
 
@@ -907,7 +907,7 @@ def _protect_against_symlinks(app_dir: RootedPath) -> None:
 
     # mypy doesn't see the object type from chain can only be a str or a Path and reports an error
     for p in chain(go_control_files, go_sources_paths):
-        check_potential_symlink(p)  # type: ignore
+        check_potential_symlink(p)  # type: ignore[arg-type]
 
 
 def _find_missing_gomod_files(source_path: RootedPath, subpaths: list[str]) -> list[Path]:

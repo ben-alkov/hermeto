@@ -193,7 +193,7 @@ class RequestOutput(pydantic.BaseModel):
         if lhs is not None and rhs is not None:
             # The if-guard above is not enough to convince mypy that options
             # cannot be None at this point.
-            options.update(rhs)  # type: ignore
+            options.update(rhs)  # type: ignore[union-attr]
         return self.__class__.from_obj_list(
             annotations=annotations,
             components=components,

@@ -333,7 +333,7 @@ def clone_as_tarball(url: str, ref: str, to_path: Path) -> None:
 
 def _reset_git_head(repo: GitRepo, ref: str) -> None:
     try:
-        repo.head.reference = repo.commit(ref)  # type: ignore # 'reference' is a weird property
+        repo.head.reference = repo.commit(ref)  # type: ignore[misc] # 'reference' is a weird property
         repo.head.reset(index=True, working_tree=True)
     except GitError as ex:
         log.exception(

@@ -343,7 +343,7 @@ def _get_main_package(source_dir: RootedPath, package_json: PackageJson) -> Work
             solution="Ensure the package.json file has a valid name.",
         )
     return WorkspacePackage(
-        name=package_json.data.get("name"),  # type: ignore
+        name=package_json.data.get("name"),  # type: ignore[arg-type]
         version=package_json.data.get("version"),
         path=source_dir,
     )
@@ -355,7 +355,7 @@ def _get_workspace_packages(
     """Return a WorkspacePackage for each Workspace."""
     return [
         WorkspacePackage(
-            name=ws.package_json.data.get("name"),  # type: ignore
+            name=ws.package_json.data.get("name"),  # type: ignore[arg-type]
             version=ws.package_json.data.get("version"),
             path=source_dir.join_within_root(ws.path),
         )

@@ -79,7 +79,7 @@ class Package:
         # Disable mypy here:
         # - the required fields here correspond with mandatory RPM tags, so they won't be None
         # - download_url isn't an RPM tag, but it's non-null value is guarded by a pydantic model
-        package = cls(**kwargs)  # type: ignore
+        package = cls(**kwargs)  # type: ignore[arg-type]
         log.debug("RPM package attributes for '%s': %s", rpm_filepath, package)
         return package
 

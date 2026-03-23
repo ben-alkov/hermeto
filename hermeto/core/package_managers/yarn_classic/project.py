@@ -12,7 +12,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Any
 
-from pyarn import lockfile  # type: ignore
+from pyarn import lockfile  # type: ignore[import-untyped]
 
 from hermeto.core.errors import InvalidLockfileFormat, LockfileNotFound, PackageRejected
 from hermeto.core.rooted_path import RootedPath
